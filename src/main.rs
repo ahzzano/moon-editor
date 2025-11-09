@@ -1,8 +1,8 @@
 pub mod editor;
 
-use editor::Editor;
+use editor::EditorView;
 
 #[tokio::main]
 async fn main() {
-    let _ = iced::application(Editor::title, Editor::update, Editor::view).run();
+    let _ = iced::application(EditorView::title, EditorView::update, EditorView::view).run();
 }

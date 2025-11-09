@@ -1,12 +1,12 @@
 use iced::{widget::text, Element};
 
 #[derive(Default)]
-pub struct Editor;
+pub struct EditorView;
 
 #[derive(Debug, Clone)]
 pub enum Message {}
 
-impl Editor {
+impl EditorView {
     pub fn new() -> Self {
         Self
     }
