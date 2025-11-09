@@ -8,7 +8,7 @@ use tokio::io;
 #[derive(Default, Debug)]
 pub struct EditorState {
     lines: Vec<String>,
-    cursor_pos: (u32, u32),
+    cursor_pos: (i32, i32),
 }
 
 impl EditorState {
@@ -48,6 +48,23 @@ impl EditorState {
 
     pub fn get_lines(&self) -> &Vec<String> {
         &self.lines
+    }
+
+    pub fn move_cursor(&mut self, offsets: (i32, i32)) {
+        let (old_x, old_line) = self.cursor_pos;
+        let (off_x, off_line) = offsets;
+
+        let (mut new_x, mut new_line) = (old_x + off_x, old_line + off_line);
+
+        if new_x < 0 {
+            new_x = 0;
+        }
+
+        if new_line < 0 {
+            new_line = 0;
+        }
+
+        self.cursor_pos = (new_x, new_line);
     }
 }
 

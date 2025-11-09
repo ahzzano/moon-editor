@@ -61,6 +61,12 @@ impl EditorView {
                         Key::Named(keyboard::key::Named::Space) => {
                             self.state.write_line(" ");
                         }
+                        Key::Named(keyboard::key::Named::ArrowUp) => {
+                            self.state.move_cursor((0, -1));
+                        }
+                        Key::Named(keyboard::key::Named::ArrowDown) => {
+                            self.state.move_cursor((0, 1));
+                        }
                         _ => {}
                     }
                 } else if let Key::Character(s) = key.as_ref() {
