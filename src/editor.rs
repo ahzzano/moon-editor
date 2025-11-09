@@ -1,14 +1,22 @@
 use iced::{widget::text, Element};
 
+use crate::editor::core::EditorState;
+
+pub mod core;
+
 #[derive(Default)]
-pub struct EditorView;
+pub struct EditorView {
+    state: EditorState
+}
 
 #[derive(Debug, Clone)]
 pub enum Message {}
 
 impl EditorView {
     pub fn new() -> Self {
-        Self
+        Self {
+            state: EditorState::default()
+        }
     }
 
     pub fn title(&self) -> String {
