@@ -64,9 +64,8 @@ impl EditorState {
             new_line = 0;
         }
 
-        if new_line >= self.lines.len() as i32 {
-            new_line = self.lines.len() as i32;
-        }
+        new_line = new_line.max(self.lines.len() as i32 - 1);
+        new_x = new_x.max(self.lines[old_line as usize].len() as i32 - 1);
 
         self.cursor_pos = (new_x, new_line);
     }
