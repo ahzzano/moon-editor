@@ -3,7 +3,7 @@ use std::{io, sync::Arc};
 use iced::{
     Element, Subscription, Task,
     keyboard::{self, Key, Modifiers},
-    widget::{column, text},
+    widget::{column, container, text},
 };
 
 use crate::editor::core::{EditorState, load_file, write_to_file};
@@ -113,7 +113,7 @@ impl EditorView {
 
         let lines = binding.iter().map(|line| text!("{}", line).into());
 
-        column(lines).into()
+        container(column(lines)).padding(10).into()
     }
 
     pub fn subscription(&self) -> Subscription<Message> {

@@ -71,7 +71,6 @@ impl EditorState {
         }
 
         self.cursor_pos = (new_x, new_line);
-        println!("{} {}", new_x, new_line);
     }
 }
 
