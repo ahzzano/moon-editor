@@ -1,4 +1,7 @@
-use std::{fs::read_to_string, sync::Arc};
+use std::{
+    fs::{self, read_to_string},
+    sync::Arc,
+};
 
 use tokio::io;
 
@@ -45,6 +48,12 @@ impl EditorState {
 
     pub fn get_lines(&self) -> &Vec<String> {
         &self.lines
+    }
+
+    pub async fn write_to_file(&self, path: String) -> Result<(), io::Error> {
+        let bytes: Vec<u8> = self.lines.join("\n").bytes().collect();
+        fs::write(path, bytes)?;
+        Ok(())
     }
 }
 
