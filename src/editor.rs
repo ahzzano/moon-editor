@@ -74,16 +74,19 @@ impl EditorView {
                 Task::none()
             }
             Message::ModKey(modifier, key) => {
-                if let Mod::CTRL = modifier
-                    && key == "s"
-                {
-                    let lines = self.state.get_lines().clone();
-                    return Task::perform(
-                        write_to_file(lines, format!("{}/src/main.rs", env!("CARGO_MANIFEST_DIR"))),
-                        Message::Saved,
-                    );
+                let key = key.as_str();
+                match (modifier, key) {
+                    (Mod::CTRL, "s") => {
+                        Task::perform(
+                            write_to_file(
+                                self.state.get_lines().clone(),
+                                format!("{}/src/main.rs", env!("CARGO_MANIFEST_DIR")),
+                            ),
+                            Message::Saved,
+                        )
+                    }
+                    _ => Task::none(),
                 }
-                Task::none()
             }
             Message::FileOpened(Ok(content)) => {
                 println!("Loading content...");
