@@ -64,10 +64,14 @@ impl EditorState {
             new_line = 0;
         }
 
-        new_line = new_line.max(self.lines.len() as i32 - 1);
-        new_x = new_x.max(self.lines[old_line as usize].len() as i32 - 1);
+        new_line = new_line.min(self.lines.len() as i32 - 1);
+        let line = self.lines.get(old_line as usize);
+        if let Some(s) = line {
+            new_x = new_x.min(s.len() as i32 - 1);
+        }
 
         self.cursor_pos = (new_x, new_line);
+        println!("{} {}", new_x, new_line);
     }
 }
 
