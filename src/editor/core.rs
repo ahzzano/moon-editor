@@ -72,6 +72,10 @@ impl EditorState {
 
         self.cursor_pos = (new_x, new_line);
     }
+
+    pub fn get_cursor(&self) -> &(i32, i32) {
+        &self.cursor_pos
+    }
 }
 
 pub async fn write_to_file(lines: Vec<String>, path: String) -> Result<(), io::Error> {

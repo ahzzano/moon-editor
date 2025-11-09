@@ -1,9 +1,7 @@
-use std::{io, sync::Arc};
+use std::{char, io, sync::Arc};
 
 use iced::{
-    Element, Subscription, Task,
-    keyboard::{self, Key, Modifiers},
-    widget::{column, container, text},
+    keyboard::{self, Key, Modifiers}, widget::{column, container, span, text}, Element, Subscription, Task
 };
 
 use crate::editor::core::{EditorState, load_file, write_to_file};
@@ -111,9 +109,19 @@ impl EditorView {
     pub fn view(&self) -> Element<'_, Message> {
         let binding = self.state.get_lines();
 
-        let lines = binding.iter().map(|line| text!("{}", line).into());
+        let lines = binding.iter().enumerate().map(|(i, s)| self.line_to_text(s.to_string(), i));
 
         container(column(lines)).padding(10).into()
+    }
+
+    fn line_to_text(&self, line: String, i: usize) -> Element<'_, Message> {
+        let (x, y) = self.state.get_cursor();
+        if i as i32 == *y {
+            // TODO
+            text(line).into()
+        } else {
+            text(line).into()
+        }
     }
 
     pub fn subscription(&self) -> Subscription<Message> {
