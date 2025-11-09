@@ -76,15 +76,14 @@ impl EditorView {
             Message::ModKey(modifier, key) => {
                 let key = key.as_str();
                 match (modifier, key) {
-                    (Mod::CTRL, "s") => {
-                        Task::perform(
-                            write_to_file(
-                                self.state.get_lines().clone(),
-                                format!("{}/src/main.rs", env!("CARGO_MANIFEST_DIR")),
-                            ),
-                            Message::Saved,
-                        )
-                    }
+                    (Mod::CTRL, "s") => Task::perform(
+                        write_to_file(
+                            self.state.get_lines().clone(),
+                            format!("{}/src/main.rs", env!("CARGO_MANIFEST_DIR")),
+                        ),
+                        Message::Saved,
+                    ),
+                    (Mod::CTRL, "q") => iced::exit(),
                     _ => Task::none(),
                 }
             }
