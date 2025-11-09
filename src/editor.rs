@@ -42,10 +42,22 @@ impl EditorView {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::KeyPress(key, mods) => {
-                let as_ref = key.as_ref();
-                if mods.control() && as_ref == Key::Character("s") {
-                        println!("Save!");
+                if mods.is_empty() {
+                    match key.as_ref() {
+                        Key::Character(s) => {
+                            self.state.write_line(s);
+
+                        }
+                        Key::Named(keyboard::key::Named::Backspace) => {
+                            self.state.backspace();
+                        }
+                        Key::Named(keyboard::key::Named::Space) => {
+                            self.state.write_line(" ");
+                        }
+                        _ => {}
+                        
                     }
+                }
                 Task::none()
             }
             Message::FileOpened(Ok(content)) => {
@@ -58,13 +70,9 @@ impl EditorView {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let binding = self
-            .state
-            .get_lines();
+        let binding = self.state.get_lines();
 
-        let lines = binding
-            .iter()
-            .map(|line| text!("{}", line).into());
+        let lines = binding.iter().map(|line| text!("{}", line).into());
 
         column(lines).into()
     }
