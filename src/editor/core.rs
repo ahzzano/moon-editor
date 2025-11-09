@@ -49,12 +49,12 @@ impl EditorState {
     pub fn get_lines(&self) -> &Vec<String> {
         &self.lines
     }
+}
 
-    pub async fn write_to_file(&self, path: String) -> Result<(), io::Error> {
-        let bytes: Vec<u8> = self.lines.join("\n").bytes().collect();
-        fs::write(path, bytes)?;
-        Ok(())
-    }
+pub async fn write_to_file(lines: Vec<String>, path: String) -> Result<(), io::Error> {
+    let bytes: Vec<u8> = lines.join("\n").bytes().collect();
+    fs::write(path, bytes)?;
+    Ok(())
 }
 
 pub async fn load_file(path: String) -> Result<Arc<String>, io::ErrorKind> {

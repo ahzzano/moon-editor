@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{io, sync::Arc};
 
 use iced::{
     Element, Subscription, Task,
@@ -6,7 +6,7 @@ use iced::{
     widget::{column, text},
 };
 
-use crate::editor::core::{EditorState, load_file};
+use crate::editor::core::{EditorState, load_file, write_to_file};
 
 pub mod core;
 
@@ -16,9 +16,16 @@ pub struct EditorView {
 }
 
 #[derive(Debug)]
+pub enum Mod {
+    CTRL,
+    CTRLSHIFT,
+}
+
+#[derive(Debug)]
 pub enum Message {
     KeyPress(Key, Modifiers),
-    Saved,
+    ModKey(Mod, String),
+    Saved(Result<(), io::Error>),
     FileOpened(Result<Arc<String>, tokio::io::ErrorKind>),
 }
 
@@ -46,8 +53,8 @@ impl EditorView {
                     match key.as_ref() {
                         Key::Character(s) => {
                             self.state.write_line(s);
-
                         }
+
                         Key::Named(keyboard::key::Named::Backspace) => {
                             self.state.backspace();
                         }
@@ -55,8 +62,26 @@ impl EditorView {
                             self.state.write_line(" ");
                         }
                         _ => {}
-                        
                     }
+                } else if let Key::Character(s) = key.as_ref() {
+                    if mods.control() || mods.command() {
+                        return Task::done(Message::ModKey(Mod::CTRL, s.to_string()));
+                    }
+                    if mods.control() && mods.shift() {
+                        return Task::done(Message::ModKey(Mod::CTRLSHIFT, s.to_string()));
+                    }
+                }
+                Task::none()
+            }
+            Message::ModKey(modifier, key) => {
+                if let Mod::CTRL = modifier
+                    && key == "s"
+                {
+                    let lines = self.state.get_lines().clone();
+                    return Task::perform(
+                        write_to_file(lines, format!("{}/src/main.rs", env!("CARGO_MANIFEST_DIR"))),
+                        Message::Saved,
+                    );
                 }
                 Task::none()
             }
